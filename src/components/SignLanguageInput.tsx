@@ -41,7 +41,7 @@ const SignLanguageInput: React.FC<SignLanguageInputProps> = ({ onInput, onClose,
         const loadedModel = await window.handpose.load();
         setModel(loadedModel);
         
-        // Define Gestures
+        // Define Gestures with more lenient rules for better detection
         const fp = window.fp;
         const GE = new fp.GestureEstimator([
             createGesture(fp, 'A', [
@@ -58,82 +58,46 @@ const SignLanguageInput: React.FC<SignLanguageInputProps> = ({ onInput, onClose,
                 [fp.Finger.Ring, fp.FingerCurl.NoCurl],
                 [fp.Finger.Pinky, fp.FingerCurl.NoCurl]
             ]),
-            createGesture(fp, 'C', [
-                [fp.Finger.Thumb, fp.FingerCurl.NoCurl],
-                [fp.Finger.Index, fp.FingerCurl.HalfCurl],
-                [fp.Finger.Middle, fp.FingerCurl.HalfCurl],
-                [fp.Finger.Ring, fp.FingerCurl.HalfCurl],
-                [fp.Finger.Pinky, fp.FingerCurl.HalfCurl]
-            ]),
-            createGesture(fp, 'D', [
-                [fp.Finger.Thumb, fp.FingerCurl.FullCurl],
+            createGesture(fp, 'QUIZ', [ // 1 Finger: Index up (Pointing up)
                 [fp.Finger.Index, fp.FingerCurl.NoCurl],
-                [fp.Finger.Middle, fp.FingerCurl.FullCurl],
-                [fp.Finger.Ring, fp.FingerCurl.FullCurl],
-                [fp.Finger.Pinky, fp.FingerCurl.FullCurl]
-            ]),
-            createGesture(fp, 'E', [
-                [fp.Finger.Thumb, fp.FingerCurl.HalfCurl],
-                [fp.Finger.Index, fp.FingerCurl.FullCurl],
-                [fp.Finger.Middle, fp.FingerCurl.FullCurl],
-                [fp.Finger.Ring, fp.FingerCurl.FullCurl],
-                [fp.Finger.Pinky, fp.FingerCurl.FullCurl]
-            ]),
-            createGesture(fp, 'SPACE', [
-                [fp.Finger.Thumb, fp.FingerCurl.NoCurl],
-                [fp.Finger.Index, fp.FingerCurl.NoCurl],
-                [fp.Finger.Middle, fp.FingerCurl.FullCurl],
-                [fp.Finger.Ring, fp.FingerCurl.FullCurl],
-                [fp.Finger.Pinky, fp.FingerCurl.NoCurl]
-            ]),
-            createGesture(fp, 'BACK', [
-                [fp.Finger.Thumb, fp.FingerCurl.NoCurl],
-                [fp.Finger.Index, fp.FingerCurl.FullCurl],
-                [fp.Finger.Middle, fp.FingerCurl.FullCurl],
-                [fp.Finger.Ring, fp.FingerCurl.FullCurl],
-                [fp.Finger.Pinky, fp.FingerCurl.NoCurl]
-            ]),
-            createGesture(fp, '👋', [ // Hello
-                [fp.Finger.Thumb, fp.FingerCurl.NoCurl],
-                [fp.Finger.Index, fp.FingerCurl.NoCurl],
-                [fp.Finger.Middle, fp.FingerCurl.NoCurl],
-                [fp.Finger.Ring, fp.FingerCurl.NoCurl],
-                [fp.Finger.Pinky, fp.FingerCurl.NoCurl]
-            ]),
-            createGesture(fp, '👍', [ // Yes
-                [fp.Finger.Thumb, fp.FingerCurl.NoCurl],
-                [fp.Finger.Index, fp.FingerCurl.FullCurl],
-                [fp.Finger.Middle, fp.FingerCurl.FullCurl],
-                [fp.Finger.Ring, fp.FingerCurl.FullCurl],
-                [fp.Finger.Pinky, fp.FingerCurl.FullCurl]
-            ]),
-            createGesture(fp, '👎', [ // No
-                [fp.Finger.Thumb, fp.FingerCurl.NoCurl],
-                [fp.Finger.Index, fp.FingerCurl.FullCurl],
                 [fp.Finger.Middle, fp.FingerCurl.FullCurl],
                 [fp.Finger.Ring, fp.FingerCurl.FullCurl],
                 [fp.Finger.Pinky, fp.FingerCurl.FullCurl],
-                [fp.Finger.Thumb, fp.FingerDirection.VerticalDown]
+                [fp.Finger.Thumb, fp.FingerCurl.HalfCurl]
             ]),
-            createGesture(fp, 'QUIZ', [ // 1 Finger: Index up
-                [fp.Finger.Thumb, fp.FingerCurl.FullCurl],
+            createGesture(fp, 'SUMMARY', [ // 2 Fingers: Index and Middle up (V Sign)
                 [fp.Finger.Index, fp.FingerCurl.NoCurl],
+                [fp.Finger.Middle, fp.FingerCurl.NoCurl],
+                [fp.Finger.Ring, fp.FingerCurl.FullCurl],
+                [fp.Finger.Pinky, fp.FingerCurl.FullCurl],
+                [fp.Finger.Thumb, fp.FingerCurl.HalfCurl]
+            ]),
+            createGesture(fp, 'FLASHCARDS', [ // 3 Fingers (W Sign)
+                [fp.Finger.Index, fp.FingerCurl.NoCurl],
+                [fp.Finger.Middle, fp.FingerCurl.NoCurl],
+                [fp.Finger.Ring, fp.FingerCurl.NoCurl],
+                [fp.Finger.Pinky, fp.FingerCurl.FullCurl],
+                [fp.Finger.Thumb, fp.FingerCurl.HalfCurl]
+            ]),
+            createGesture(fp, '👋', [ // Hello (Open Hand)
+                [fp.Finger.Index, fp.FingerCurl.NoCurl],
+                [fp.Finger.Middle, fp.FingerCurl.NoCurl],
+                [fp.Finger.Ring, fp.FingerCurl.NoCurl],
+                [fp.Finger.Pinky, fp.FingerCurl.NoCurl],
+                [fp.Finger.Thumb, fp.FingerCurl.NoCurl]
+            ]),
+            createGesture(fp, '👍', [ // Thumb Up
+                [fp.Finger.Thumb, fp.FingerCurl.NoCurl],
+                [fp.Finger.Index, fp.FingerCurl.FullCurl],
                 [fp.Finger.Middle, fp.FingerCurl.FullCurl],
                 [fp.Finger.Ring, fp.FingerCurl.FullCurl],
                 [fp.Finger.Pinky, fp.FingerCurl.FullCurl]
             ]),
-            createGesture(fp, 'SUMMARY', [ // 2 Fingers: Index and Middle up
-                [fp.Finger.Thumb, fp.FingerCurl.FullCurl],
-                [fp.Finger.Index, fp.FingerCurl.NoCurl],
-                [fp.Finger.Middle, fp.FingerCurl.NoCurl],
+            createGesture(fp, '👎', [ // Thumb Down
+                [fp.Finger.Thumb, fp.FingerCurl.NoCurl],
+                [fp.Finger.Index, fp.FingerCurl.FullCurl],
+                [fp.Finger.Middle, fp.FingerCurl.FullCurl],
                 [fp.Finger.Ring, fp.FingerCurl.FullCurl],
-                [fp.Finger.Pinky, fp.FingerCurl.FullCurl]
-            ]),
-            createGesture(fp, 'FLASHCARDS', [ // 3 Fingers: Index, Middle, Ring up
-                [fp.Finger.Thumb, fp.FingerCurl.FullCurl],
-                [fp.Finger.Index, fp.FingerCurl.NoCurl],
-                [fp.Finger.Middle, fp.FingerCurl.NoCurl],
-                [fp.Finger.Ring, fp.FingerCurl.NoCurl],
                 [fp.Finger.Pinky, fp.FingerCurl.FullCurl]
             ]),
         ]);
@@ -150,8 +114,8 @@ const SignLanguageInput: React.FC<SignLanguageInputProps> = ({ onInput, onClose,
   const createGesture = (fp: any, name: string, rules: any[]) => {
       const gesture = new fp.GestureDescription(name);
       rules.forEach(([finger, curl, dir]) => {
-          gesture.addCurl(finger, curl, 1.0); // 1.0 confidence
-          if (dir) gesture.addDirection(finger, dir, 0.9);
+          gesture.addCurl(finger, curl, 1.0);
+          if (dir) gesture.addDirection(finger, dir, 1.0);
       });
       return gesture;
   };
@@ -174,17 +138,14 @@ const SignLanguageInput: React.FC<SignLanguageInputProps> = ({ onInput, onClose,
             canvasRef.current.width = video.videoWidth;
             canvasRef.current.height = video.videoHeight;
             ctx.clearRect(0, 0, video.videoWidth, video.videoHeight);
-            
-            // Draw Hand Mesh
             drawHand(predictions, ctx);
         }
 
-        // Estimate Gesture
-        const est = await estimator.estimate(predictions[0].landmarks, 7.5);
+        // Estimate Gesture - Using a lower threshold for better reactivity (6.0 instead of 7.5)
+        const est = await estimator.estimate(predictions[0].landmarks, 6.0);
         if (est.gestures.length > 0) {
-          // Find gesture with highest confidence
           const best = est.gestures.reduce((p: any, c: any) => p.confidence > c.confidence ? p : c);
-          if (best.confidence > 8) {
+          if (best.confidence > 6.5) { // Lowered from 8.0
               setDetectedSign(best.name);
               setConfidence(best.confidence);
           } else {
@@ -239,14 +200,60 @@ const SignLanguageInput: React.FC<SignLanguageInputProps> = ({ onInput, onClose,
   }, [detectedSign, onInput]);
 
 
+  useEffect(() => {
+    let stream: MediaStream | null = null;
+    const startCamera = async () => {
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { width: 640, height: 480, facingMode: "user" } 
+          });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        }
+      } catch (err) {
+        console.error("Camera access failed", err);
+      }
+    };
+    startCamera();
+    return () => {
+      if (stream) stream.getTracks().forEach(track => track.stop());
+    };
+  }, []);
+
   const drawHand = (predictions: any, ctx: CanvasRenderingContext2D) => {
     predictions.forEach((prediction: any) => {
       const landmarks = prediction.landmarks;
+      
+      // Draw Connections (Bones)
+      const fingerJoints: { [key: string]: number[] } = {
+        thumb: [0, 1, 2, 3, 4],
+        indexFinger: [0, 5, 6, 7, 8],
+        middleFinger: [0, 9, 10, 11, 12],
+        ringFinger: [0, 13, 14, 15, 16],
+        pinky: [0, 17, 18, 19, 20],
+      };
+
+      Object.values(fingerJoints).forEach(jointIndices => {
+        for (let k = 0; k < jointIndices.length - 1; k++) {
+          const firstJointIndex = jointIndices[k];
+          const secondJointIndex = jointIndices[k + 1];
+          ctx.beginPath();
+          ctx.moveTo(landmarks[firstJointIndex][0], landmarks[firstJointIndex][1]);
+          ctx.lineTo(landmarks[secondJointIndex][0], landmarks[secondJointIndex][1]);
+          ctx.strokeStyle = "rgba(59, 130, 246, 0.5)";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      });
+
+      // Draw Joints
       for (let j = 0; j < landmarks.length; j++) {
         const x = landmarks[j][0];
         const y = landmarks[j][1];
         ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 3 * Math.PI);
+        ctx.arc(x, y, 4, 0, 3 * Math.PI);
         ctx.fillStyle = theme === 'dark' ? "#3b82f6" : "#6366f1";
         ctx.fill();
       }
@@ -280,14 +287,6 @@ const SignLanguageInput: React.FC<SignLanguageInputProps> = ({ onInput, onClose,
                     if (videoRef.current) {
                         videoRef.current.width = videoRef.current.videoWidth;
                         videoRef.current.height = videoRef.current.videoHeight;
-                    }
-                }}
-                ref={(ref) => {
-                    if (ref && navigator.mediaDevices) {
-                        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-                            ref.srcObject = stream;
-                            (videoRef as any).current = ref;
-                        });
                     }
                 }}
             />
